@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is Metro/2.2.0-1 (tags/2.2.0u1-7139; 2012-06-02T10:55:19+0000) JAXWS-RI/2.2.6-2 JAXWS/2.2 svn-revision#unknown. --><xs:schema xmlns:tns="http://sequential/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://sequential/">
+
+<xs:element name="byIndexSimulation" type="tns:byIndexSimulation"/>
+
+<xs:element name="byIndexSimulationResponse" type="tns:byIndexSimulationResponse"/>
+
+<xs:element name="fullSimulation" type="tns:fullSimulation"/>
+
+<xs:element name="fullSimulationResponse" type="tns:fullSimulationResponse"/>
+
+<xs:complexType name="byIndexSimulation">
+<xs:sequence>
+<xs:element name="request" type="tns:serviceRateWS" minOccurs="0"/>
+<xs:element name="arrivingRate" type="xs:double" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="serviceRateWS">
+<xs:sequence>
+<xs:element name="number" type="xs:int"/>
+<xs:element name="serviceRate" type="xs:double"/>
+<xs:element name="standarDeviation" type="xs:double"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="byIndexSimulationResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:int" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="fullSimulation">
+<xs:sequence>
+<xs:element name="queue" type="tns:serviceRateWS" minOccurs="0" maxOccurs="unbounded"/>
+<xs:element name="arrivingRate" type="xs:double" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="fullSimulationResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:int" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+</xs:schema>

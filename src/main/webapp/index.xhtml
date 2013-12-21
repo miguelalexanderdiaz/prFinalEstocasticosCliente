@@ -1,0 +1,120 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"  
+      xmlns:h="http://java.sun.com/jsf/html"  
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">  
+    <h:head>
+        <title>Simulador De Colas para WebServices</title>
+    </h:head>
+    <h:body>
+        <p:layout fullPage="true">  
+
+
+            <p:layoutUnit position="center">  
+                <h:form>  
+                    <p:accordionPanel>
+                        <p:tab title="Cola de WebServices Secuencial">
+                            <h:panelGrid columns="2" cellpadding="10">
+
+                                <p:outputLabel for="numClients" value="Número de Clientes:"/>
+                                <p:inputText id="numClients" value="#{sequentialWebController.numberClients}"/>
+
+                                <p:outputLabel for="tazaLlegada" value="Taza de Llegada (peticiones por segundo):"/>
+                                <p:inputText id="tazaLlegada" value="#{sequentialWebController.arrivingRate}"/>
+
+                                <p:outputLabel for="numeroWebServices" value="Número de WebServices:"/>
+                                <p:inputText id="numeroWebServices" value="#{sequentialWebController.numberWebServices}" autocomplete="false">
+                                    <p:ajax event="keyup" listener="#{sequentialWebController.numberWebServicesChange()}" update="serviceRateTable"/>
+                                </p:inputText>
+
+                                <p:outputLabel value=""/>
+                                <p:dataTable id="serviceRateTable" var="row" value="#{sequentialWebController.serviceRateList}" editable="true" editMode="cell" cellSeparator="\/" widgetVar="serviceRateTable">
+                                    <f:facet name="header">  
+                                        Tazas de Servicio para Cada Web Service  
+                                    </f:facet>
+                                    <p:column headerText="Número de WebService"  >
+                                        <p:cellEditor>
+                                            <f:facet name="output"><h:outputText value="#{row.number}" /></f:facet>  
+                                            <f:facet name="input"><p:inputText disabled="true" id="modelInput" value="#{row.number}" />
+                                            </f:facet>  
+                                        </p:cellEditor>
+                                    </p:column>
+
+                                    <p:ajax event="cellEdit" listener="#{sequentialWebController.onCellEdit}" />
+                                    <p:column id="serviceRate" headerText="Clientes procesados por segundo">
+                                        <p:cellEditor>
+                                            <f:facet  name="output">
+                                                <h:outputText id="cell1" value="#{row.serviceRate}" /> 
+                                            </f:facet>  
+                                            <f:facet name="input">
+                                                <p:inputText id="modelInput1" value="#{row.serviceRate}" style="width:46%" title="Taza de Servicio"/>                                
+                                            </f:facet>  
+                                        </p:cellEditor>
+                                    </p:column>
+
+                                    <p:column headerText="Desviación Estándar">
+                                        <p:cellEditor>
+                                            <f:facet  name="output">
+                                                <h:outputText  value="#{row.standarDeviation}" /> 
+                                            </f:facet>  
+                                            <f:facet name="input">
+                                                <p:inputText id="modelInput2" value="#{row.standarDeviation}" style="width:47%" label="Desviación Estándar" title="Desviación Estándar"/>
+                                            </f:facet>  
+                                        </p:cellEditor>
+                                    </p:column>
+                                </p:dataTable>
+
+
+<!--
+                                <p:outputLabel for="realTime" value="Simulación en Tiempo Real:"/>  
+                                <p:selectOneRadio id="realTime" value="#{sequentialWebController.realTime}">  
+                                    <f:selectItem itemLabel="Tiempo Real (muestra resultados teniendo en cuenta los tiempos de simulacion)" itemValue="true" />  
+                                    <f:selectItem itemLabel="Sin Tiempo Real (muestra los resultados de forma inmediata)" itemValue="false" />  
+                                </p:selectOneRadio> 
+-->
+
+                            </h:panelGrid>
+
+                            <center>
+                                <p:commandButton value="Iniciar Simulación" action="#{sequentialWebController.executeSimulation}" ajax="false" />
+                            </center>
+
+
+
+                            <p:panel id="chartPanel" rendered="#{sequentialWebController.visibleComponents}">
+                                <center>
+                                    <h:panelGrid columns="1" cellpadding="10" rendered="#{sequentialWebController.visibleComponents}">
+                                        <p:outputLabel for="txtSlider" value="Seleccione el número de Cliente"/>
+                                        <p:inputText id="txtSlider" value="#{sequentialWebController.selectedClient}" >
+                                            <p:ajax event="keyup" listener="#{sequentialWebController.onSlideChange()}" update="lineChart"/>
+                                        </p:inputText>  
+                                        <p:slider id="slider" for="txtSlider" maxValue="#{sequentialWebController.numberClients}" minValue="1" >
+                                            <p:ajax event="slideEnd" listener="#{sequentialWebController.onSlideEnd}" update="lineChart"/>
+                                        </p:slider>
+                                    </h:panelGrid> 
+                                </center>
+                                <p:focus context="lineChart"/>  
+                                <p:lineChart id="lineChart" value="#{sequentialWebController.graphModel}" legendPosition="e" rendered="#{sequentialWebController.visibleComponents}"/>
+                                
+                            </p:panel>
+                            <p:lineChart id="totalLineChart" value="#{sequentialWebController.totalTimeGraph}" legendPosition="e" rendered="#{sequentialWebController.visibleComponents}"/>
+                        </p:tab>
+
+                        <p:tab title="Cola de WebServices en Paralelo">
+
+                        </p:tab>
+                    </p:accordionPanel>
+
+
+
+                </h:form>  
+            </p:layoutUnit>  
+
+        </p:layout>  
+
+
+    </h:body>
+</html>
+
