@@ -111,35 +111,42 @@ public class SequentialWebController {
 
     
 
-
+            //lista de los resultados de la simulacion
             resultsQueue = sequentialController.noRealTimeSimulation(queue, arrivingRate, numberClients);
             List<Integer> simulatedResults = resultsQueue.get(selectedClient-1).getResults();
+            //asignacion de los resultados simulados a las graficas web
             for (int i = 0; i < numberWebServices; i++) {
                 simulation.set(i + 1, simulatedResults.get(i));
             }
-
+            
+            //lista de los resultados predichos por la formula
             List<ResultsQueue> predictionResults = sequentialController.mathPrediction(queue, arrivingRate,numberClients);
+            //asignacion de los resultados predichos a las graficas web
             List<Integer> predictionRes=predictionResults.get(selectedClient-1).getResults();
             for (int i = 0; i < numberWebServices; i++) {
                 prediction.set(i + 1, predictionRes.get(i));
             }
             
+            //lista con acumulacion de los resultados simulados
            List<Long> totalSimulatedResults =new ArrayList<Long>();
            totalSimulatedResults.add(resultsQueue.get(0).getFinalResult());
            for(int i=1;i<resultsQueue.size();i++){
                totalSimulatedResults.add(resultsQueue.get(i).getFinalResult()+totalSimulatedResults.get(i-1));
            }
            
+           //asignacion de los resultados simulados acumulados a las graficas web
            for(int i=0;i<totalSimulatedResults.size();i++){
                totalSimulation.set(i+1, totalSimulatedResults.get(i));
            }
            
+           //lista con acumulacion de los resultados predichos 
            List<Long> totalPredictedResults =new ArrayList<Long>();
            totalPredictedResults.add(predictionResults.get(0).getFinalResult());
            for(int i=1;i<predictionResults.size();i++){
                totalPredictedResults.add(predictionResults.get(i).getFinalResult()+totalPredictedResults.get(i-1));
            }
            
+           //asignacion de los resultados predichos acumulados a las graficas web
            for(int i=0;i<totalPredictedResults.size();i++){
                totalPrediction.set(i+1, totalPredictedResults.get(i));
            }
